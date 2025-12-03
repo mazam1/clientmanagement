@@ -24,15 +24,18 @@ class InvoiceSeeder extends Seeder
 
             $sessionIds = $sessions->pluck('id')->toArray();
             $totalMinutes = $sessions->sum('duration_minutes');
-            $hourlyRate = 100;
+            $hourlyRate = 50;
+            $taxRate = 10;
             $subtotal = ($totalMinutes / 60) * $hourlyRate;
-            $taxAmount = $subtotal * 0.1;
+            $taxAmount = $subtotal * ($taxRate / 100);
             $totalAmount = $subtotal + $taxAmount;
 
             Invoice::create([
                 'client_id' => $client->id,
                 'invoice_number' => 'INV-'.date('Ymd').'-'.str_pad(Invoice::count() + 1, 4, '0', STR_PAD_LEFT),
                 'session_ids' => $sessionIds,
+                'hourly_rate' => $hourlyRate,
+                'tax_rate' => $taxRate,
                 'subtotal' => $subtotal,
                 'tax_amount' => $taxAmount,
                 'total_amount' => $totalAmount,

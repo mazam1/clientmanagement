@@ -190,35 +190,106 @@
         </x-card>
 
         <!-- Invoices Summary Card -->
-        <x-card title="Invoices Summary">
+        <x-card>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary">Invoices</h3>
+                @can('create-invoices')
+                    <x-button href="{{ route('invoices.create', ['client_id' => $client->id]) }}" variant="primary" size="sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Create Invoice
+                    </x-button>
+                @endcan
+            </div>
+
             @if($client->invoices->isNotEmpty())
-                <x-table :headers="['Invoice #', 'Issued Date', 'Amount', 'Status']">
-                    @foreach($client->invoices as $invoice)
-                        <tr class="hover:bg-bg-tertiary dark:hover:bg-dark-bg-tertiary transition-colors">
-                            <td class="px-6 py-4 font-medium text-text-primary dark:text-dark-text-primary">{{ $invoice->invoice_number }}</td>
-                            <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">{{ $invoice->issued_at->format('M d, Y') }}</td>
-                            <td class="px-6 py-4 font-semibold text-text-primary dark:text-dark-text-primary">${{ number_format($invoice->total_amount, 2) }}</td>
-                            <td class="px-6 py-4">
-                                @if($invoice->payment_status === 'paid')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-success text-white">
-                                        Paid
-                                    </span>
-                                @elseif($invoice->payment_status === 'partial')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-warning text-white">
-                                        Partial
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-danger text-white">
-                                        Unpaid
-                                    </span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </x-table>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-border-medium dark:border-dark-border-medium">
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">Invoice #</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">Issued Date</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">Amount</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">Status</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-text-primary dark:text-dark-text-primary">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border-light dark:divide-dark-border-light">
+                            @foreach($client->invoices->sortByDesc('issued_at') as $invoice)
+                                <tr class="hover:bg-bg-secondary dark:hover:bg-dark-bg-secondary transition-colors">
+                                    <td class="px-4 py-3 text-sm font-medium text-text-primary dark:text-dark-text-primary font-mono">
+                                        {{ $invoice->invoice_number }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary dark:text-dark-text-secondary">
+                                        {{ $invoice->issued_at->format('M d, Y') }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm font-semibold text-text-primary dark:text-dark-text-primary">
+                                        ${{ number_format($invoice->total_amount, 2) }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        @if($invoice->payment_status === 'paid')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-success text-white">
+                                                Paid
+                                            </span>
+                                        @elseif($invoice->payment_status === 'partial')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-warning text-white">
+                                                Partial
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-danger text-white">
+                                                Unpaid
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            @can('view-invoices')
+                                                <a href="{{ route('invoices.show', $invoice->id) }}" class="text-accent-primary hover:text-accent-secondary" title="View">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                    </svg>
+                                                </a>
+                                                <a href="{{ route('invoices.print', $invoice->id) }}" target="_blank" class="text-text-secondary dark:text-dark-text-secondary hover:text-accent-primary dark:hover:text-accent-primary" title="Print">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                                    </svg>
+                                                </a>
+                                            @endcan
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                @if($client->invoices->count() > 10)
+                    @can('view-invoices')
+                        <div class="mt-4 text-center">
+                            <a href="{{ route('invoices.index', ['client_id' => $client->id]) }}" class="text-sm text-accent-primary hover:text-accent-secondary font-medium">
+                                View All {{ $client->invoices->count() }} Invoices →
+                            </a>
+                        </div>
+                    @endcan
+                @endif
             @else
                 <div class="text-center py-8">
-                    <p class="text-text-tertiary dark:text-dark-text-tertiary">No invoices generated yet.</p>
+                    <svg class="mx-auto h-12 w-12 text-text-secondary dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="text-text-secondary dark:text-dark-text-secondary mt-2">No invoices generated yet.</p>
+                    @can('create-invoices')
+                        <div class="mt-4">
+                            <x-button href="{{ route('invoices.create', ['client_id' => $client->id]) }}" variant="primary" size="sm">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Create First Invoice
+                            </x-button>
+                        </div>
+                    @endcan
                 </div>
             @endif
         </x-card>

@@ -1,4 +1,4 @@
-@props(['variant' => 'primary', 'size' => 'md'])
+@props(['variant' => 'primary', 'size' => 'md', 'href' => null])
 
 @php
 $baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2';
@@ -20,6 +20,12 @@ $sizes = [
 $classes = $baseClasses . ' ' . $variants[$variant] . ' ' . $sizes[$size];
 @endphp
 
-<button {{ $attributes->merge(['type' => 'button', 'class' => $classes]) }}>
-    {{ $slot }}
-</button>
+@if($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+        {{ $slot }}
+    </a>
+@else
+    <button {{ $attributes->merge(['type' => 'button', 'class' => $classes]) }}>
+        {{ $slot }}
+    </button>
+@endif

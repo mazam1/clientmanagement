@@ -1,0 +1,42 @@
+    /**
+     * Export invoices to CSV.
+     */
+    public function exportToCSV(array $filters = []): string
+    {
+        $query = Invoice::query()->with('client');
+
+        // Apply filters
+        if (!empty($filters['client_id'])) {
+            $query->where('client_id', $filters['client_id']);
+        }
+        if (!empty($filters['payment_status'])) {
+            $query->where('payment_status', $filters['payment_status']);
+        }
+        if (!empty($filters['date_from'])) {
+            $query->whereDate('issued_at', '>=', $filters['date_from']);
+        }
+        if (!empty($filters['date_to'])) {
+            $query->whereDate('issued_at', '<=', $filters['date_to']);
+        }
+
+        $invoices = $query->orderBy('issued_at', 'desc')->get();
+
+        // Generate CSV
+        $csv = "Invoice Number,Client,Issued Date,Payment Status,Subtotal,Tax,Total,Payment Date\n";
+
+        foreach ($invoices as $invoice) {
+            $csv .= sprintf(
+                "%s,%s,%s,%s,%.2f,%.2f,%.2f,%s\n",
+                $invoice->invoice_number,
+                '"' . str_replace('"', '""', $invoice->client->name) . '"',
+                $invoice->issued_at->format('Y-m-d'),
+                ucfirst($invoice->payment_status),
+                $invoice->subtotal,
+                $invoice->tax_amount,
+                $invoice->total_amount,
+                $invoice->payment_date ? $invoice->payment_date->format('Y-m-d') : 'N/A'
+            );
+        }
+
+        return $csv;
+    }

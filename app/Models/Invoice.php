@@ -15,6 +15,8 @@ class Invoice extends Model
         'client_id',
         'invoice_number',
         'session_ids',
+        'hourly_rate',
+        'tax_rate',
         'subtotal',
         'tax_amount',
         'total_amount',
@@ -27,6 +29,8 @@ class Invoice extends Model
     {
         return [
             'session_ids' => 'array',
+            'hourly_rate' => 'decimal:2',
+            'tax_rate' => 'decimal:2',
             'subtotal' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'total_amount' => 'decimal:2',
