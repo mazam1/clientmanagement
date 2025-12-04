@@ -85,7 +85,6 @@
                     @can('edit-invoices')
                         <form method="POST" action="{{ route('invoices.mark-paid', $invoice->id) }}" class="inline">
                             @csrf
-                            @method('PATCH')
                             <x-button type="submit" variant="success" size="md">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -98,7 +97,6 @@
                     @can('edit-invoices')
                         <form method="POST" action="{{ route('invoices.mark-unpaid', $invoice->id) }}" class="inline">
                             @csrf
-                            @method('PATCH')
                             <x-button type="submit" variant="secondary" size="md">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

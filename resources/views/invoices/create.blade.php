@@ -80,7 +80,8 @@
                         required
                         x-model="clientId"
                         @change="loadSessions()"
-                        class="w-full px-4 py-2 rounded-lg border border-border-medium dark:border-dark-border-medium bg-bg-primary dark:bg-dark-bg-primary text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent @error('client_id') border-accent-danger @enderror"
+                        {{ $selectedClientId ? 'disabled' : '' }}
+                        class="w-full px-4 py-2 rounded-lg border border-border-medium dark:border-dark-border-medium bg-bg-primary dark:bg-dark-bg-primary text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent @error('client_id') border-accent-danger @enderror {{ $selectedClientId ? 'opacity-60 cursor-not-allowed' : '' }}"
                     >
                         <option value="">Select a client</option>
                         @foreach($clients as $client)
@@ -89,6 +90,9 @@
                             </option>
                         @endforeach
                     </select>
+                    @if($selectedClientId)
+                        <input type="hidden" name="client_id" value="{{ $selectedClientId }}">
+                    @endif
                     @error('client_id')
                         <p class="mt-1 text-sm text-accent-danger">{{ $message }}</p>
                     @enderror
