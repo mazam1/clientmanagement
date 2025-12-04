@@ -148,13 +148,15 @@
                             if (this.query.length < 2) {
                                 this.results = [];
                                 this.showDropdown = false;
+                                this.isSearching = false;
                                 return;
                             }
 
-                            this.isSearching = true;
                             this.showDropdown = true;
 
                             this.searchTimeout = setTimeout(() => {
+                                this.isSearching = true;
+
                                 fetch('{{ route('search') }}?query=' + encodeURIComponent(this.query))
                                     .then(response => response.json())
                                     .then(data => {

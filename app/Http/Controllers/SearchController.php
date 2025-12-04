@@ -43,11 +43,13 @@ class SearchController extends Controller
             $sessions = ClientSession::with('client')
                 ->where(function ($q) use ($query) {
                     $q->whereHas('client', function ($subQ) use ($query) {
-                        $subQ->where('name', 'like', "%{$query}%");
+                        $subQ->where('name', 'like', "%{$query}%")
+                            ->orWhere('email', 'like', "%{$query}%")
+                            ->orWhere('phone', 'like', "%{$query}%");
                     })
-                        ->orWhere('session_type', 'like', "%{$query}%")
                         ->orWhere('notes', 'like', "%{$query}%");
                 })
+                ->orderBy('session_date', 'desc')
                 ->limit(5)
                 ->get();
 
@@ -55,8 +57,8 @@ class SearchController extends Controller
                 if ($session->client) {
                     $results[] = [
                         'type' => 'session',
-                        'title' => "{$session->client->name} - {$session->session_type}",
-                        'subtitle' => $session->session_date->format('M d, Y'),
+                        'title' => "{$session->client->name} - Session",
+                        'subtitle' => $session->session_date->format('M d, Y').' - '.$session->duration_hours.' hrs',
                         'url' => route('sessions.show', $session),
                     ];
                 }
