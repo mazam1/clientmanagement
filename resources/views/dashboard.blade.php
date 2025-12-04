@@ -7,9 +7,9 @@
         Welcome to your Client Management Dashboard
     </x-slot>
 
-    <div class="space-y-6">
+    <div class="space-y-4 md:space-y-6">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <x-stat-card
                 title="Total Revenue"
                 :value="'$' . number_format($stats['total_revenue'], 2)"
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Activity & Top Clients Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <!-- Recent Activity -->
             <x-card title="Recent Activity">
                 <div class="space-y-4">

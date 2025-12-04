@@ -175,7 +175,8 @@
     <!-- Invoices Table -->
     <x-card>
         @if($invoices->count() > 0)
-            <div class="overflow-x-auto">
+            <!-- Desktop Table -->
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-border-primary dark:border-dark-border-primary">
                         <tr>
@@ -276,6 +277,83 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile/Tablet Cards -->
+            <div class="lg:hidden space-y-4">
+                @foreach($invoices as $invoice)
+                    <div class="bg-bg-secondary dark:bg-dark-bg-secondary border border-border-medium dark:border-dark-border-medium rounded-lg p-4">
+                        <a href="{{ route('invoices.show', $invoice->id) }}" class="block mb-3">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
+                                        {{ substr($invoice->client->name, 0, 1) }}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-accent-primary">{{ $invoice->invoice_number }}</p>
+                                        <p class="text-base font-semibold text-text-primary dark:text-dark-text-primary truncate">{{ $invoice->client->name }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-lg font-bold text-text-primary dark:text-dark-text-primary">${{ number_format($invoice->total_amount, 2) }}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-text-secondary dark:text-dark-text-secondary">
+                                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <span>{{ $invoice->issued_at->format('M d, Y') }}</span>
+                                    </div>
+                                    @if($invoice->payment_status === 'paid')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success/10 dark:bg-success/20 text-success">
+                                            Paid
+                                        </span>
+                                    @elseif($invoice->payment_status === 'partial')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-warning/10 dark:bg-warning/20 text-warning">
+                                            Partial
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-danger/10 dark:bg-danger/20 text-danger">
+                                            Unpaid
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                        <div class="flex gap-2 pt-3 border-t border-border-light dark:border-dark-border-light">
+                            @can('view-invoices')
+                                <a href="{{ route('invoices.print', $invoice->id) }}" target="_blank" class="flex-1 flex items-center justify-center px-3 py-2 bg-bg-primary dark:bg-dark-bg-primary border border-border-medium dark:border-dark-border-medium text-text-primary dark:text-dark-text-primary rounded-lg text-sm font-medium hover:bg-bg-tertiary dark:hover:bg-dark-bg-tertiary transition-colors min-h-[44px]">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                    </svg>
+                                    Print
+                                </a>
+                            @endcan
+                            @can('edit-invoices')
+                                <a href="{{ route('invoices.edit', $invoice->id) }}" class="flex-1 flex items-center justify-center px-3 py-2 bg-accent-primary text-white rounded-lg text-sm font-medium hover:bg-accent-primary/90 transition-colors min-h-[44px]">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Edit
+                                </a>
+                            @endcan
+                            @can('delete-invoices')
+                                <form method="POST" action="{{ route('invoices.destroy', $invoice->id) }}" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this invoice?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full flex items-center justify-center px-3 py-2 bg-accent-danger text-white rounded-lg text-sm font-medium hover:bg-accent-danger/90 transition-colors min-h-[44px]">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </form>
+                            @endcan
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             <!-- Pagination -->

@@ -15,22 +15,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-bg-secondary dark:bg-dark-bg-secondary transition-colors duration-200">
-        <div class="min-h-screen">
+        <div x-data="{ sidebarOpen: false }" class="min-h-screen">
             <!-- Sidebar -->
             @include('layouts.partials.sidebar')
 
             <!-- Main Content Area -->
-            <div class="ml-sidebar transition-all duration-200">
+            <div class="lg:ml-sidebar transition-all duration-200">
                 <!-- Topbar -->
                 @include('layouts.partials.topbar')
 
                 <!-- Page Content -->
-                <main class="pt-16 px-6 py-8">
+                <main class="pt-16 px-4 py-6 md:px-6 md:py-8">
                     <div class="max-w-7xl mx-auto">
                         <!-- Page Header -->
                         @if(isset($header))
-                            <div class="mb-6">
-                                <h1 class="text-3xl font-semibold text-text-primary dark:text-dark-text-primary mb-2">
+                            <div class="mb-4 md:mb-6">
+                                <h1 class="text-2xl md:text-3xl font-semibold text-text-primary dark:text-dark-text-primary mb-2">
                                     {{ $header }}
                                 </h1>
                                 @if(isset($description))

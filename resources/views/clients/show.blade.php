@@ -131,9 +131,9 @@
                             @else
                                 <div class="block p-4 bg-bg-secondary dark:bg-dark-bg-secondary rounded-lg">
                             @endcan
-                                <div class="flex items-center justify-between">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex flex-wrap items-center gap-3 mb-1">
                                             <p class="font-medium text-text-primary dark:text-dark-text-primary">
                                                 {{ \Carbon\Carbon::parse($session->session_date)->format('M d, Y') }}
                                             </p>
@@ -142,11 +142,11 @@
                                             </span>
                                         </div>
                                         @if($session->notes)
-                                            <p class="text-sm text-text-secondary dark:text-dark-text-secondary mt-1 max-w-2xl truncate">{{ $session->notes }}</p>
+                                            <p class="text-sm text-text-secondary dark:text-dark-text-secondary break-words line-clamp-2">{{ $session->notes }}</p>
                                         @endif
                                     </div>
                                     @can('view-sessions')
-                                        <svg class="w-5 h-5 text-text-secondary dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 text-text-secondary dark:text-dark-text-secondary flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                         </svg>
                                     @endcan
@@ -204,7 +204,7 @@
             </div>
 
             @if($client->invoices->isNotEmpty())
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-border-medium dark:border-dark-border-medium">

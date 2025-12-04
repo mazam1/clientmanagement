@@ -172,7 +172,8 @@
     <!-- Sessions Table -->
     <x-card>
         @if($sessions->count() > 0)
-            <div class="overflow-x-auto">
+            <!-- Desktop Table -->
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-border-primary dark:border-dark-border-primary">
                         <tr>
@@ -255,6 +256,65 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile/Tablet Cards -->
+            <div class="lg:hidden space-y-4">
+                @foreach($sessions as $session)
+                    <div class="bg-bg-secondary dark:bg-dark-bg-secondary border border-border-medium dark:border-dark-border-medium rounded-lg p-4">
+                        <a href="{{ route('sessions.show', $session->id) }}" class="block mb-3">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
+                                    {{ substr($session->client->name, 0, 1) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-base font-semibold text-accent-primary truncate">{{ $session->client->name }}</h3>
+                                    <p class="text-sm text-text-secondary dark:text-dark-text-secondary">{{ $session->session_type ?? 'Session' }}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center text-text-secondary dark:text-dark-text-secondary">
+                                    <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>{{ \Carbon\Carbon::parse($session->session_date)->format('M d, Y') }} • {{ \Carbon\Carbon::parse($session->session_date)->diffForHumans() }}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent-primary/10 dark:bg-accent-primary/20 text-accent-primary">
+                                        {{ $session->duration_minutes }} min ({{ number_format($session->duration_minutes / 60, 1) }}h)
+                                    </span>
+                                </div>
+                                @if($session->notes)
+                                    <div class="text-text-secondary dark:text-dark-text-secondary text-xs pt-2 border-t border-border-light dark:border-dark-border-light">
+                                        {{ Str::limit($session->notes, 100) }}
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                        <div class="flex gap-2 pt-3 border-t border-border-light dark:border-dark-border-light">
+                            @can('edit-sessions')
+                                <a href="{{ route('sessions.edit', $session->id) }}" class="flex-1 flex items-center justify-center px-3 py-2 bg-accent-primary text-white rounded-lg text-sm font-medium hover:bg-accent-primary/90 transition-colors min-h-[44px]">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Edit
+                                </a>
+                            @endcan
+                            @can('delete-sessions')
+                                <form method="POST" action="{{ route('sessions.destroy', $session->id) }}" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this session?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full flex items-center justify-center px-3 py-2 bg-accent-danger text-white rounded-lg text-sm font-medium hover:bg-accent-danger/90 transition-colors min-h-[44px]">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </form>
+                            @endcan
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             <!-- Pagination -->

@@ -191,62 +191,137 @@
                     @endcan
                 </div>
             @else
-                <!-- Clients Table -->
-                <x-table :headers="['Name', 'Email', 'Phone', 'Status', 'Created', 'Actions']">
+                <!-- Clients Table (Desktop) -->
+                <div class="hidden lg:block">
+                    <x-table :headers="['Name', 'Email', 'Phone', 'Status', 'Created', 'Actions']">
+                        @foreach($clients as $client)
+                            <tr class="hover:bg-bg-tertiary dark:hover:bg-dark-bg-tertiary transition-colors cursor-pointer" onclick="window.location='{{ route('clients.show', $client) }}'">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold mr-3">
+                                            {{ strtoupper(substr($client->name, 0, 1)) }}
+                                        </div>
+                                        <span class="font-medium text-text-primary dark:text-dark-text-primary">{{ $client->name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">{{ $client->email ?? '-' }}</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">{{ $client->phone ?? '-' }}</td>
+                                <td class="px-6 py-4">
+                                    @if($client->status === 'active')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-success text-white">
+                                            Active
+                                        </span>
+                                    @elseif($client->status === 'inactive')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-text-tertiary dark:bg-dark-text-tertiary text-white">
+                                            Inactive
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-warning text-white">
+                                            Archived
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-text-tertiary dark:text-dark-text-tertiary text-sm">{{ $client->created_at->format('M d, Y') }}</td>
+                                <td class="px-6 py-4" onclick="event.stopPropagation()">
+                                    <div class="flex items-center gap-2">
+                                        @can('edit-clients')
+                                            <a href="{{ route('clients.edit', $client) }}" class="text-accent-primary hover:text-accent-primary/80">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </a>
+                                        @endcan
+
+                                        @can('delete-clients')
+                                            <form method="POST" action="{{ route('clients.destroy', $client) }}" onsubmit="return confirm('Are you sure you want to delete this client?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-accent-danger hover:text-accent-danger/80">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-table>
+                </div>
+
+                <!-- Clients Cards (Mobile/Tablet) -->
+                <div class="lg:hidden space-y-4">
                     @foreach($clients as $client)
-                        <tr class="hover:bg-bg-tertiary dark:hover:bg-dark-bg-tertiary transition-colors cursor-pointer" onclick="window.location='{{ route('clients.show', $client) }}'">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold mr-3">
+                        <div class="bg-bg-secondary dark:bg-dark-bg-secondary border border-border-medium dark:border-dark-border-medium rounded-lg p-4">
+                            <a href="{{ route('clients.show', $client) }}" class="block">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
                                         {{ strtoupper(substr($client->name, 0, 1)) }}
                                     </div>
-                                    <span class="font-medium text-text-primary dark:text-dark-text-primary">{{ $client->name }}</span>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-base font-semibold text-text-primary dark:text-dark-text-primary truncate">{{ $client->name }}</h3>
+                                        @if($client->status === 'active')
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-success text-white">
+                                                Active
+                                            </span>
+                                        @elseif($client->status === 'inactive')
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-text-tertiary dark:bg-dark-text-tertiary text-white">
+                                                Inactive
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-warning text-white">
+                                                Archived
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">{{ $client->email ?? '-' }}</td>
-                            <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">{{ $client->phone ?? '-' }}</td>
-                            <td class="px-6 py-4">
-                                @if($client->status === 'active')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-success text-white">
-                                        Active
-                                    </span>
-                                @elseif($client->status === 'inactive')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-text-tertiary dark:bg-dark-text-tertiary text-white">
-                                        Inactive
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-warning text-white">
-                                        Archived
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-text-tertiary dark:text-dark-text-tertiary text-sm">{{ $client->created_at->format('M d, Y') }}</td>
-                            <td class="px-6 py-4" onclick="event.stopPropagation()">
-                                <div class="flex items-center gap-2">
-                                    @can('edit-clients')
-                                        <a href="{{ route('clients.edit', $client) }}" class="text-accent-primary hover:text-accent-primary/80">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center text-text-secondary dark:text-dark-text-secondary">
+                                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <span class="truncate">{{ $client->email ?? 'No email' }}</span>
+                                    </div>
+                                    <div class="flex items-center text-text-secondary dark:text-dark-text-secondary">
+                                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                        </svg>
+                                        <span>{{ $client->phone ?? 'No phone' }}</span>
+                                    </div>
+                                    <div class="flex items-center text-text-tertiary dark:text-dark-text-tertiary text-xs">
+                                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <span>Created {{ $client->created_at->format('M d, Y') }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="flex gap-2 mt-3 pt-3 border-t border-border-light dark:border-dark-border-light">
+                                @can('edit-clients')
+                                    <a href="{{ route('clients.edit', $client) }}" class="flex-1 flex items-center justify-center px-3 py-2 bg-accent-primary text-white rounded-lg text-sm font-medium hover:bg-accent-primary/90 transition-colors min-h-[44px]">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                @endcan
+                                @can('delete-clients')
+                                    <form method="POST" action="{{ route('clients.destroy', $client) }}" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this client?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full flex items-center justify-center px-3 py-2 bg-accent-danger text-white rounded-lg text-sm font-medium hover:bg-accent-danger/90 transition-colors min-h-[44px]">
+                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
-                                        </a>
-                                    @endcan
-
-                                    @can('delete-clients')
-                                        <form method="POST" action="{{ route('clients.destroy', $client) }}" onsubmit="return confirm('Are you sure you want to delete this client?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-accent-danger hover:text-accent-danger/80">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    @endcan
-                                </div>
-                            </td>
-                        </tr>
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endcan
+                            </div>
+                        </div>
                     @endforeach
-                </x-table>
+                </div>
 
                 <!-- Pagination -->
                 <div class="mt-6">

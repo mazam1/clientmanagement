@@ -14,6 +14,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('permission:view-dashboard')
         ->name('dashboard');
 
+    // Global search route
+    Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
+
     // Test super admin route
     Route::get('/admin-only', function () {
         return 'Super Admin Access - You have full permissions!';

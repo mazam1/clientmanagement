@@ -15,14 +15,14 @@ $trendColors = [
 ];
 @endphp
 
-<div class="bg-bg-primary dark:bg-dark-bg-primary border border-border-medium dark:border-dark-border-medium rounded-lg p-6 hover:shadow-md transition-shadow">
+<div class="bg-bg-primary dark:bg-dark-bg-primary border border-border-medium dark:border-dark-border-medium rounded-lg p-4 md:p-6 hover:shadow-md transition-shadow">
     <div class="flex items-center justify-between">
         <div class="flex-1">
-            <p class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{ $title }}</p>
-            <p class="text-3xl font-bold text-text-primary dark:text-dark-text-primary">{{ $value }}</p>
+            <p class="text-xs md:text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{ $title }}</p>
+            <p class="text-2xl md:text-3xl font-bold text-text-primary dark:text-dark-text-primary">{{ $value }}</p>
             
             @if($trend)
-                <div class="flex items-center mt-2 text-sm {{ $trendColors[$trend['direction']] }}">
+                <div class="flex items-center mt-2 text-xs md:text-sm {{ $trendColors[$trend['direction']] }}">
                     @if($trend['direction'] === 'up')
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
