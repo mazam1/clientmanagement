@@ -66,6 +66,7 @@ export default {
                 '18': '4.5rem',
                 '88': '22rem',
                 '104': '26rem',
+                'sidebar': '260px',
             },
             width: {
                 'sidebar': '260px',

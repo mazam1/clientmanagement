@@ -25,8 +25,8 @@
                 @include('layouts.partials.topbar')
 
                 <!-- Page Content -->
-                <main class="pt-16 px-4 py-6 md:px-6 md:py-8">
-                    <div class="max-w-7xl mx-auto">
+                <main class="pt-16 px-4 py-6 md:px-6 md:py-8 lg:flex lg:justify-center">
+                    <div class="w-full max-w-7xl">
                         <!-- Page Header -->
                         @if(isset($header))
                             <div class="mb-4 md:mb-6">
