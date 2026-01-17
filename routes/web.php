@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // View routes - Requires view-sessions permission
         Route::middleware('permission:view-sessions')->group(function () {
-            Route::get('/', [\App\Http\Controllers\SessionController::class, 'index'])->name('index');
+            Route::get('/', [\App\Http\Controllers\SessionController::class, 'index'])->name('list');
             Route::get('/{id}', [\App\Http\Controllers\SessionController::class, 'show'])->name('show');
         });
 
@@ -145,7 +145,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // View routes - Requires view-clients permission
         Route::middleware('permission:view-clients')->group(function () {
-            Route::get('/', [\App\Http\Controllers\ClientController::class, 'index'])->name('index');
+            Route::get('/', [\App\Http\Controllers\ClientController::class, 'index'])->name('list');
             Route::get('/{client}', [\App\Http\Controllers\ClientController::class, 'show'])->name('show');
         });
 

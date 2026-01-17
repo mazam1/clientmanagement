@@ -216,9 +216,9 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold mr-3">
-                                            {{ strtoupper(substr($session->client->name, 0, 1)) }}
+                                            {{ strtoupper(substr($session->client?->name ?? 'N/A', 0, 1)) }}
                                         </div>
-                                        <span class="font-medium text-text-primary dark:text-dark-text-primary">{{ $session->client->name }}</span>
+                                        <span class="font-medium text-text-primary dark:text-dark-text-primary">{{ $session->client?->name ?? 'Client Deleted' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-text-secondary dark:text-dark-text-secondary">
@@ -266,10 +266,10 @@
                             <a href="{{ route('sessions.show', $session) }}" class="block">
                                 <div class="flex items-center gap-3 mb-3">
                                     <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
-                                        {{ strtoupper(substr($session->client->name, 0, 1)) }}
+                                        {{ strtoupper(substr($session->client?->name ?? 'N/A', 0, 1)) }}
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-base font-semibold text-text-primary dark:text-dark-text-primary truncate">{{ $session->client->name }}</h3>
+                                        <h3 class="text-base font-semibold text-text-primary dark:text-dark-text-primary truncate">{{ $session->client?->name ?? 'Client Deleted' }}</h3>
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-primary text-white">
                                             {{ $session->duration_minutes }} min ({{ number_format($session->duration_minutes / 60, 1) }}h)
                                         </span>

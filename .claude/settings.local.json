@@ -10,7 +10,8 @@
       "Bash(if not exist \"c:\\laragon\\www\\clientmanagement\\resources\\views\\layouts\\partials\" mkdir \"c:\\laragon\\www\\clientmanagement\\resources\\views\\layouts\\partials\")",
       "Bash(vendor/bin/pint:*)",
       "Bash(npm run build:*)",
-      "Bash(if not exist \"c:\\laragon\\www\\clientmanagement\\resources\\views\\sessions\" mkdir \"c:\\laragon\\www\\clientmanagement\\resources\\views\\sessions\")"
+      "Bash(if not exist \"c:\\laragon\\www\\clientmanagement\\resources\\views\\sessions\" mkdir \"c:\\laragon\\www\\clientmanagement\\resources\\views\\sessions\")",
+      "Bash(php:*)"
     ],
     "deny": [],
     "ask": []

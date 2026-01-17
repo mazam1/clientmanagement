@@ -59,7 +59,7 @@
             <!-- Clients -->
             @can('view-clients')
             <li>
-                <a href="{{ route('clients.index') }}"
+                <a href="{{ route('clients.list') }}"
                    @click="sidebarOpen = false"
                    class="flex items-center px-4 py-3 rounded-lg transition-colors duration-150 {{ request()->routeIs('clients.*') ? 'bg-sidebar-active text-sidebar-text border-l-4 border-accent-primary' : 'text-sidebar-text-muted hover:bg-sidebar-hover hover:text-sidebar-text' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,7 +73,7 @@
             <!-- Sessions -->
             @can('view-sessions')
             <li>
-                <a href="{{ route('sessions.index') }}"
+                <a href="{{ route('sessions.list') }}"
                    @click="sidebarOpen = false"
                    class="flex items-center px-4 py-3 rounded-lg transition-colors duration-150 {{ request()->routeIs('sessions.*') ? 'bg-sidebar-active text-sidebar-text border-l-4 border-accent-primary' : 'text-sidebar-text-muted hover:bg-sidebar-hover hover:text-sidebar-text' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
