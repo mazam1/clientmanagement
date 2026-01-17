@@ -94,7 +94,7 @@
                         Create Client
                     </x-button>
 
-                    <a href="{{ route('clients.index') }}">
+                    <a href="{{ route('clients.list') }}">
                         <x-button type="button" variant="secondary" size="md">
                             Cancel
                         </x-button>

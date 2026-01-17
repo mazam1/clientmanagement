@@ -109,7 +109,7 @@
 
                 <!-- Form Actions -->
                 <div class="flex items-center justify-end gap-4 pt-4 border-t border-border-primary dark:border-dark-border-primary">
-                    <x-button href="{{ route('sessions.index') }}" variant="ghost">
+                    <x-button href="{{ route('sessions.list') }}" variant="ghost">
                         Cancel
                     </x-button>
                     <x-button type="submit" variant="primary">
